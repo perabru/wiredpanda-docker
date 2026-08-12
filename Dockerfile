@@ -7,10 +7,7 @@ RUN git clone \
     --single-branch \
     --branch site \
     https://github.com/GIBIS-UNIFESP/wiredpanda.git \
-    /wiredpanda \
-    && wget -q \
-    -O /wiredpanda/public/wasm/LICENSE.txt \
-    https://raw.githubusercontent.com/GIBIS-UNIFESP/wiRedPanda/master/LICENSE
+    /wiredpanda
 
 FROM nginx:alpine
 
