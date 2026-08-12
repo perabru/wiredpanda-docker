@@ -1,4 +1,4 @@
-FROM alpine:3.22 AS download
+FROM alpine:3.22 AS downloader
 
 RUN apk add --no-cache git ca-certificates
 
@@ -7,16 +7,14 @@ RUN git clone \
     --single-branch \
     --branch site \
     https://github.com/GIBIS-UNIFESP/wiredpanda.git \
-    /wiredpanda
+    /wiredpanda \
+    && test -f /wiredpanda/public/wasm/index.html
 
 FROM nginx:alpine
 
-COPY --from=download /wiredpanda/public/wasm/ /usr/share/nginx/html/
+COPY --from=downloader /wiredpanda/public/wasm/ /usr/share/nginx/html/
 COPY default.conf.template /etc/nginx/templates/default.conf.template
 
 ENV PORT=8080
 
 EXPOSE 8080
-
-HEALTHCHECK --interval=30s --timeout=5s \
-    CMD wget -q --spider "http://127.0.0.1:${PORT}/" || exit 1
