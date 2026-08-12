@@ -7,15 +7,14 @@ RUN git clone \
     --single-branch \
     --branch site \
     https://github.com/GIBIS-UNIFESP/wiredpanda.git \
-    /wiredpanda
+    /wiredpanda \
+    && wget -q \
+    -O /wiredpanda/public/wasm/LICENSE.txt \
+    https://raw.githubusercontent.com/GIBIS-UNIFESP/wiRedPanda/master/LICENSE
 
 FROM nginx:alpine
 
-LABEL org.opencontainers.image.source="https://github.com/GIBIS-UNIFESP/wiredpanda"
-
 COPY --from=download /wiredpanda/public/wasm/ /usr/share/nginx/html/
-COPY --from=download /wiredpanda/LICENSE /usr/share/nginx/html/LICENSE.txt
-
 COPY default.conf.template /etc/nginx/templates/default.conf.template
 
 ENV PORT=8080
